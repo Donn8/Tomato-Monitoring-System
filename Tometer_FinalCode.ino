@@ -42,13 +42,15 @@ FirebaseAuth auth;
 FirebaseConfig config;
 
 String uid;
+// variables to store the database path
 String monitoringPath = "Monitoring/ORYKnhqk7pBTxVxvRzBN";
 String recordsPath = "MonitoringRecords/XSZPr53wonitDgnu0ueg";
 String testingPath = "TestingPurposes";
 String plantLevelPath = "addplantslider/JjKxbd9cnvhq15NRSAVN";
-String growthlevel = "plantlevel";
 String actuatorstatePath = "actuatorstate/dO8Ti65BzN0hjJWepqqn";
 
+// variable to store the current level of the plant
+String growthlevel = "plantlevel";
 
 //Define Parameters' Threshold
 float minTemp = 0;
@@ -213,6 +215,8 @@ void loop() {
   }
 
   /* UPDATING MONITORING and ACTUATORSTATE COLLECTION*/
+
+  // Updates the current values of the growth parameters in the Monitoring Collection
   std::vector<struct fb_esp_firestore_document_write_t> writes;
     //A write object that will be written to the document.
     struct fb_esp_firestore_document_write_t update_write;
@@ -309,7 +313,7 @@ void loop() {
     lastTime = currentTime;
   }
   
-  //Update Actuators' State
+  // Update the current state of the actuators on the actuatorstate collection
     struct fb_esp_firestore_document_write_t update_actWrite;
 
     update_actWrite.type = fb_esp_firestore_document_write_type_update;
@@ -355,7 +359,7 @@ void loop() {
   
 //  delay(1000);
 
-  // Commit Document and Update(Monitoring and Actuator State) Firestore
+  // Commit the creation and Update of the Document (Monitoring and Actuator State) Firestore
     if (Firebase.Firestore.commitDocument(&firebaseData, FIREBASE_PROJECT_ID, "" /* databaseId can be (default) or empty */, writes /* dynamic array of fb_esp_firestore_document_write_t */, "" /* transaction */)){
       Serial.printf("Updated\n%s\n\n", firebaseData.payload().c_str());
     }else{
